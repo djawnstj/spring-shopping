@@ -3,6 +3,7 @@ package shopping.member.infra
 import io.kotest.core.annotation.DisplayName
 import io.kotest.matchers.shouldNotBe
 import org.springframework.beans.factory.annotation.Autowired
+import shopping.member.application.MemberCommandRepository
 import shopping.member.fixture.MemberFixture
 import shopping.support.KotestIntegrationTestSupport
 

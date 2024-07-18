@@ -1,7 +1,7 @@
 package shopping.member.application
 
 import io.kotest.core.annotation.DisplayName
-import io.kotest.matchers.equality.shouldNotBeEqualUsingFields
+import io.kotest.matchers.equality.shouldBeEqualUsingFields
 import org.springframework.beans.factory.annotation.Autowired
 import shopping.member.fixture.MemberFixture
 import shopping.member.infra.MemberJpaRepository
@@ -22,7 +22,7 @@ class MemberQueryServiceIntegrationTest: KotestIntegrationTestSupport() {
                 val actual = memberQueryService.findById(member.id)
 
                 Then("회원 정보를 반환 한다") {
-                    actual shouldNotBeEqualUsingFields member
+                    actual shouldBeEqualUsingFields member
                 }
             }
         }

@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service
 import shopping.global.exception.ApplicationException
 import shopping.global.exception.ErrorCode
 import shopping.member.domain.Member
-import shopping.member.infra.MemberQueryRepository
 
 @Service
 class MemberQueryService(

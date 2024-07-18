@@ -1,6 +1,9 @@
 package shopping.member.domain
 
 import jakarta.persistence.*
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
 import shopping.global.common.BaseEntity
 
 @Entity
@@ -12,7 +15,7 @@ class Member(
     email: String,
     loginPassword: String,
     memberType: MemberType
-): BaseEntity() {
+): BaseEntity(), UserDetails {
     @field:Column(name = "email", nullable = false, unique = true)
     var email: String = email
         protected set
@@ -23,4 +26,18 @@ class Member(
     @field:Enumerated(EnumType.STRING)
     var memberType: MemberType = memberType
         protected set
+
+    override fun getAuthorities(): Collection<GrantedAuthority> = listOf(SimpleGrantedAuthority(this.memberType.name))
+
+    override fun getPassword(): String = this.loginPassword
+
+    override fun getUsername(): String? = this.email
+
+    override fun isAccountNonExpired(): Boolean = this.deletedAt == null
+
+    override fun isAccountNonLocked(): Boolean = this.deletedAt == null
+
+    override fun isCredentialsNonExpired(): Boolean = this.deletedAt == null
+
+    override fun isEnabled(): Boolean = this.deletedAt == null
 }

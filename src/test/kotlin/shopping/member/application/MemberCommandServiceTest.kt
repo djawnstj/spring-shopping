@@ -11,8 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import shopping.global.exception.ApplicationException
 import shopping.member.domain.Member
 import shopping.member.fixture.MemberFixture
-import shopping.member.infra.MemberCommandRepository
-import shopping.member.infra.MemberQueryRepository
 
 @DisplayName("MemberCommandService 테스트")
 class MemberCommandServiceTest: BehaviorSpec({
@@ -28,7 +26,7 @@ class MemberCommandServiceTest: BehaviorSpec({
         val memberCommand = MemberFixture.`고객 1`.`회원 가입 요청 DTO 생성`()
 
         When("기존 회원 중 중복된 email 이 없는 경우") {
-            every { memberQueryRepository.existsByEmail(memberCommand.email) } returns false
+            every { memberQueryRepository.existsByEmailAndNotDeleted(memberCommand.email) } returns false
             every { memberCommandRepository.save(any<Member>()) } returns member
 
             val actual = memberCommandService.createMember(memberCommand)
@@ -39,7 +37,7 @@ class MemberCommandServiceTest: BehaviorSpec({
         }
 
         When("기존 회원 중 중복된 email 이 존재 하는 경우") {
-            every { memberQueryRepository.existsByEmail(memberCommand.email) } returns true
+            every { memberQueryRepository.existsByEmailAndNotDeleted(memberCommand.email) } returns true
 
             val exception = shouldThrow<ApplicationException> {
                 memberCommandService.createMember(memberCommand)

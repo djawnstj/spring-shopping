@@ -1,0 +1,9 @@
+### 회원 가입 (USER)
+POST {{baseUrl}}{{signUpEndPoint}}
+Content-Type: application/json
+
+{
+  "email": "tester1@domain.com",
+  "loginPassword": "password",
+  "memberType": "CUSTOMER"
+}

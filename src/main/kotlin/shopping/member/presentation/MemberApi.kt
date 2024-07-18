@@ -17,7 +17,7 @@ class MemberApi(
     private val memberQueryService: MemberQueryService
 ) {
 
-    @PostMapping("/api/member")
+    @PostMapping("/api/members")
     @ResponseStatus(HttpStatus.CREATED)
     fun signUp(@RequestBody request: MemberSignUpRequest): SuccessResponse<MemberSignUpResponse> {
         val id = memberCommandService.createMember(request)

@@ -1,6 +1,7 @@
 package shopping.support
 
 import jakarta.persistence.EntityManager
+import jakarta.persistence.Table
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
@@ -12,10 +13,16 @@ class InfraCleanUp(
 ) {
     @Transactional
     fun all() {
-        val tables = entityManager.metamodel.entities.map { it.name }
+        val tables = entityManager.metamodel.entities.map { entityType ->
+            val tableName = entityType.javaType.getAnnotation(Table::class.java)?.name
 
-        tables.forEach { table ->
-            jdbcTemplate.execute("TRUNCATE table $table")
+            if (tableName.isNullOrBlank()) {
+                return@map entityType.name
+            }
+
+            return@map tableName
         }
+
+        tables.forEach { table -> jdbcTemplate.execute("TRUNCATE table $table") }
     }
 }

@@ -8,7 +8,6 @@ import io.mockk.every
 import io.mockk.mockk
 import shopping.global.exception.ApplicationException
 import shopping.member.fixture.MemberFixture
-import shopping.member.infra.MemberQueryRepository
 
 @DisplayName("MemberQueryService 테스트")
 class MemberQueryServiceTest: BehaviorSpec({

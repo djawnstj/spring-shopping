@@ -1,6 +1,7 @@
 package shopping.member.infra
 
 import org.springframework.stereotype.Repository
+import shopping.member.application.MemberCommandRepository
 import shopping.member.domain.Member
 
 @Repository

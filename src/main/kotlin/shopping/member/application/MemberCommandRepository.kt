@@ -1,4 +1,4 @@
-package shopping.member.infra
+package shopping.member.application
 
 import shopping.member.domain.Member
 

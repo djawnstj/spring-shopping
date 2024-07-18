@@ -7,19 +7,39 @@ import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.mockk.clearAllMocks
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.h2.H2ConsoleProperties
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.FilterType
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext
 import org.springframework.http.HttpStatus
+import org.springframework.security.web.AuthenticationEntryPoint
+import org.springframework.security.web.access.AccessDeniedHandler
+import org.springframework.security.web.authentication.logout.LogoutHandler
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
+import shopping.auth.application.JwtAuthenticationFilter
+import shopping.auth.application.JwtService
+import shopping.auth.application.TokenRepository
+import shopping.global.config.SecurityConfig
 import shopping.member.application.MemberCommandService
+import shopping.member.application.MemberQueryRepository
 import shopping.member.application.MemberQueryService
 import shopping.member.presentation.MemberApi
 
 @WebMvcTest(
     controllers = [
         MemberApi::class
+    ],
+    includeFilters = [
+        ComponentScan.Filter(
+            type = FilterType.ASSIGNABLE_TYPE,
+            classes = [
+                JwtAuthenticationFilter::class,
+                SecurityConfig::class,
+            ]
+        )
     ]
 )
 @MockkBean(JpaMetamodelMappingContext::class)
@@ -29,6 +49,21 @@ abstract class KotestControllerTestSupport: BehaviorSpec() {
     protected lateinit var mockMvc: MockMvc
     @Autowired
     protected lateinit var objectMapper: ObjectMapper
+
+    @MockkBean(relaxed = true)
+    private lateinit var h2ConsoleProperties: H2ConsoleProperties
+    @MockkBean
+    private lateinit var memberQueryRepository: MemberQueryRepository
+    @MockkBean
+    private lateinit var jwtService: JwtService
+    @MockkBean
+    private lateinit var logoutHandler: LogoutHandler
+    @MockkBean
+    private lateinit var entryPoint: AuthenticationEntryPoint
+    @MockkBean
+    private lateinit var accessDeniedHandler: AccessDeniedHandler
+    @MockkBean
+    private lateinit var tokenRepository: TokenRepository
 
     @MockkBean
     protected lateinit var memberCommandService: MemberCommandService

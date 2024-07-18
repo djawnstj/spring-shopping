@@ -7,8 +7,6 @@ import shopping.global.exception.ApplicationException
 import shopping.global.exception.ErrorCode
 import shopping.member.application.command.MemberCreateCommand
 import shopping.member.domain.Member
-import shopping.member.infra.MemberCommandRepository
-import shopping.member.infra.MemberQueryRepository
 
 @Service
 @Transactional
@@ -29,7 +27,7 @@ class MemberCommandService(
     }
 
     private fun isAlreadyExistEmail(member: Member): Boolean {
-        return memberQueryRepository.existsByEmail(member.email)
+        return memberQueryRepository.existsByEmailAndNotDeleted(member.email)
     }
 
 }
