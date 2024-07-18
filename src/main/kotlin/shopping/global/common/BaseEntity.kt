@@ -12,18 +12,22 @@ abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0
+    var id: Long = 0
+        protected set
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     lateinit var createdAt: LocalDateTime
+        protected set
 
     @LastModifiedDate
     @Column(name = "modified_at", nullable = false)
     lateinit var modifiedAt: LocalDateTime
+        protected set
 
     @Column(name = "deleted_at", nullable = true)
     var deletedAt: LocalDateTime? = null
+        protected set
 
     fun delete() {
         deletedAt = LocalDateTime.now()

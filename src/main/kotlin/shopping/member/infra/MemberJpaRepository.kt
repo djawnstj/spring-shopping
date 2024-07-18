@@ -7,4 +7,5 @@ import shopping.member.domain.Member
 
 @Repository
 interface MemberJpaRepository: JpaRepository<Member, Long>, KotlinJdslJpqlExecutor {
+    fun findAllByEmail(email: String): List<Member>
 }

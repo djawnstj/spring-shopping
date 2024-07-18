@@ -11,24 +11,22 @@ import shopping.member.infra.MemberCommandRepository
 import shopping.member.infra.MemberQueryRepository
 
 @Service
-@Transactional(readOnly = true)
-class MemberService(
+@Transactional
+class MemberCommandService(
     private val memberCommandRepository: MemberCommandRepository,
     private val memberQueryRepository: MemberQueryRepository,
     private val passwordEncoder: PasswordEncoder
 ) {
 
-//    fun createMember(memberCreateCommand: MemberCreateCommand): Long {
-//        val member = memberCreateCommand.toEntity(passwordEncoder)
-//
-//        if (isAlreadyExistEmail(member)) {
-//            throw ApplicationException(ErrorCode.DUPLICATED_REGISTER_EMAIL)
-//        }
-//
-//        memberCommandRepository.save(member)
-//
-//
-//    }
+    fun createMember(memberCreateCommand: MemberCreateCommand): Long {
+        val member = memberCreateCommand.toEntity(passwordEncoder)
+
+        if (isAlreadyExistEmail(member)) {
+            throw ApplicationException(ErrorCode.DUPLICATED_REGISTER_EMAIL)
+        }
+
+        return memberCommandRepository.save(member).id
+    }
 
     private fun isAlreadyExistEmail(member: Member): Boolean {
         return memberQueryRepository.existsByEmail(member.email)

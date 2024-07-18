@@ -7,8 +7,7 @@ import shopping.member.domain.Member
 class MemberCommandJpaRepository(
     private val memberJpaRepository: MemberJpaRepository
 ): MemberCommandRepository {
-
-    override fun save(member: Member) {
-        memberJpaRepository.save(member)
+    override fun save(member: Member): Member {
+        return memberJpaRepository.save(member)
     }
 }

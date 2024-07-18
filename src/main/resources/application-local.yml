@@ -36,9 +36,8 @@ logging:
   level:
     org:
       hibernate:
-        type: trace
         SQL: debug
-        type.descriptor.sql: trace
+        orm.jdbc.bind: trace
       springframework:
         orm:
           jpa: debug

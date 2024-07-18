@@ -9,12 +9,18 @@ import shopping.global.common.BaseEntity
     uniqueConstraints = [UniqueConstraint(name = "uk_member_email", columnNames = ["email"])]
 )
 class Member(
+    email: String,
+    loginPassword: String,
+    memberType: MemberType
+): BaseEntity() {
     @field:Column(name = "email", nullable = false, unique = true)
-    val email: String?,
+    var email: String = email
+        protected set
     @field:Column(name = "login_password", nullable = false)
-    val loginPassword: String,
+    var loginPassword: String = loginPassword
+        protected set
     @field:Column(name = "account_type", nullable = false)
     @field:Enumerated(EnumType.STRING)
-    val memberType: MemberType
-): BaseEntity() {
+    var memberType: MemberType = memberType
+        protected set
 }

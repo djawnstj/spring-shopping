@@ -20,7 +20,10 @@ class MemberQueryJdslRepository(
             ).from(
                 entity(Member::class)
             ).where(
-                path(Member::email).eq(email)
+                path(Member::deletedAt).isNull()
+                    .and(
+                        path(Member::email).eq(email)
+                    )
             )
         }
 
@@ -29,4 +32,17 @@ class MemberQueryJdslRepository(
             .apply { setMaxResults(1) }
             .resultList.isNotEmpty()
     }
+
+    override fun findByIdAndNotDeleted(id: Long): Member? = memberJpaRepository.findAll {
+        select(
+            entity(Member::class)
+        ).from(
+            entity(Member::class)
+        ).where(
+            path(Member::deletedAt).isNull()
+                .and(
+                    path(Member::id).equal(id)
+                )
+        )
+    }.firstOrNull()
 }
