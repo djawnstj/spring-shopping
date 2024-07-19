@@ -1,7 +1,7 @@
 package shopping.auth.application
 
 import org.springframework.security.core.userdetails.UserDetails
-import java.util.*
+import java.util.Date
 import javax.crypto.SecretKey
 
 interface TokenProvider {

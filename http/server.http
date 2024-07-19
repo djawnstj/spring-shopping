@@ -1,5 +1,5 @@
 ### 회원 가입 (USER)
-POST {{baseUrl}}{{signUpEndPoint}}
+POST {{baseUrl}}{{registerEndPoint}}
 Content-Type: application/json
 
 {

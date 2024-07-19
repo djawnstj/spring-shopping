@@ -8,14 +8,16 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.logout.LogoutHandler
 import org.springframework.stereotype.Service
 import shopping.auth.application.JwtService
-import shopping.auth.application.TokenRepository
+import shopping.auth.application.TokenCommandRepository
+import shopping.auth.application.TokenQueryRepository
 import shopping.global.common.ErrorResponse
 import shopping.global.exception.ErrorCode
 
 @Service
 class CustomLogoutHandler(
     private val jwtService: JwtService,
-    private val tokenRepository: TokenRepository,
+    private val tokenQueryRepository: TokenQueryRepository,
+    private val tokenCommandRepository: TokenCommandRepository,
     private val objectMapper: ObjectMapper
 ): LogoutHandler {
 
@@ -27,14 +29,14 @@ class CustomLogoutHandler(
 
         val jti = jwtService.getJti(authHeader.substring(7))
 
-        val savedJti = tokenRepository.findByJti(jti)
+        val savedJti = tokenQueryRepository.findByJti(jti)
 
         if (savedJti == null) {
             setTokenNotFoundResponse(response)
             return
         }
 
-        tokenRepository.deleteByJti(jti)
+        tokenCommandRepository.deleteByJti(jti)
         SecurityContextHolder.clearContext()
     }
 

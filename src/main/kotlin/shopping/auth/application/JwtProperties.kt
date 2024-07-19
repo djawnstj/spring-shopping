@@ -1,4 +1,4 @@
-package shopping.auth.infra
+package shopping.auth.application
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 

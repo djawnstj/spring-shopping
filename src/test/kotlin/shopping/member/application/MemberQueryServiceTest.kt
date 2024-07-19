@@ -32,10 +32,10 @@ class MemberQueryServiceTest: BehaviorSpec({
         When("ID 가 일치 하면서 탈퇴 하지 않은 회원이 없다면") {
             every { memberQueryRepository.findByIdAndNotDeleted(memberId) } returns null
 
-            val actual = shouldThrow<ApplicationException> { memberQueryService.findById(memberId) }
-
             Then("예외를 던진다") {
-                actual.message shouldBe "일치하는 회원 정보를 찾을 수 없습니다."
+                shouldThrow<ApplicationException> {
+                    memberQueryService.findById(memberId)
+                }.message shouldBe "일치하는 회원 정보를 찾을 수 없습니다."
             }
         }
 

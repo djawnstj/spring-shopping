@@ -5,8 +5,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
-import shopping.auth.infra.JwtProperties
-import java.util.*
+import java.util.Date
 import javax.crypto.SecretKey
 
 @Component

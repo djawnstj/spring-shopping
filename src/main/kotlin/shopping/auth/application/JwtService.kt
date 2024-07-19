@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import shopping.auth.domain.AuthenticationCredentials
-import shopping.auth.infra.JwtProperties
 import shopping.global.exception.ApplicationException
 import shopping.global.exception.ErrorCode
 import shopping.member.domain.Member
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.Base64
+import java.util.Date
+import java.util.UUID
 
 @Service
 class JwtService(
@@ -18,7 +19,6 @@ class JwtService(
     private val jwtProperties: JwtProperties,
     private val objectMapper: ObjectMapper,
 ) {
-
     fun getUsername(token: String): String = tokenProvider.extractUsername(token).isValidClaimFromToken()
 
     fun getJti(token: String): String = tokenProvider.extractJti(token).isValidClaimFromToken()
@@ -71,18 +71,18 @@ class JwtService(
         return expiration <= current
     }
 
+    private fun checkValidTokenParts(parts: List<String>) {
+        if (parts.size != 3) {
+            throw ApplicationException(ErrorCode.INVALID_ACCESS_TOKEN)
+        }
+    }
+
     private fun extractExpiration(payload: String): Long {
         objectMapper.readValue(payload, object : TypeReference<MutableMap<String, String>>() {})["exp"]?.let {
             return it.toLong()
         }
 
         throw ApplicationException(ErrorCode.INVALID_ACCESS_TOKEN)
-    }
-
-    private fun checkValidTokenParts(parts: List<String>) {
-        if (parts.size != 3) {
-            throw ApplicationException(ErrorCode.INVALID_ACCESS_TOKEN)
-        }
     }
 
 }

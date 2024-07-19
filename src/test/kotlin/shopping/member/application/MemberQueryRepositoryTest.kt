@@ -1,12 +1,15 @@
-package shopping.member.infra
+package shopping.member.application
 
+import io.kotest.core.annotation.DisplayName
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import org.springframework.beans.factory.annotation.Autowired
-import shopping.member.application.MemberQueryRepository
 import shopping.member.fixture.MemberFixture
+import shopping.member.infra.MemberJpaRepository
 import shopping.support.KotestIntegrationTestSupport
 
+@DisplayName("MemberQueryRepository 테스트")
 class MemberQueryRepositoryTest: KotestIntegrationTestSupport() {
 
     @Autowired
@@ -45,7 +48,7 @@ class MemberQueryRepositoryTest: KotestIntegrationTestSupport() {
                 val actual = memberQueryRepository.findByIdAndNotDeleted(member.id)
 
                 Then("회원 엔티티를 반환 한다") {
-                    actual shouldNotBe null
+                    actual.shouldNotBeNull()
                 }
             }
 
@@ -53,7 +56,7 @@ class MemberQueryRepositoryTest: KotestIntegrationTestSupport() {
                 val actual = memberQueryRepository.findByIdAndNotDeleted(1L)
 
                 Then("null 을 반환 한다") {
-                    actual shouldBe  null
+                    actual.shouldBeNull()
                 }
             }
 
@@ -65,7 +68,7 @@ class MemberQueryRepositoryTest: KotestIntegrationTestSupport() {
                 val actual = memberQueryRepository.findByIdAndNotDeleted(member.id)
 
                 Then("null 을 반환 한다") {
-                    actual shouldBe  null
+                    actual.shouldBeNull()
                 }
             }
         }

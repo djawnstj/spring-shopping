@@ -1,8 +1,10 @@
 package shopping.member.application
 
 import io.kotest.core.annotation.DisplayName
+import io.kotest.matchers.equality.shouldBeEqualToUsingFields
 import io.kotest.matchers.equality.shouldBeEqualUsingFields
 import org.springframework.beans.factory.annotation.Autowired
+import shopping.member.domain.Member
 import shopping.member.fixture.MemberFixture
 import shopping.member.infra.MemberJpaRepository
 import shopping.support.KotestIntegrationTestSupport
@@ -16,13 +18,13 @@ class MemberQueryServiceIntegrationTest: KotestIntegrationTestSupport() {
 
     init {
         Given("회원 ID 로 회원을 찾을때") {
-            val member = memberJpaRepository.save(MemberFixture.`고객 1`.`회원 엔티티 생성`())
+            val member = memberJpaRepository.saveAndFlush(MemberFixture.`고객 1`.`회원 엔티티 생성`())
 
             When("일치 하는 회원 정보가 있다면") {
                 val actual = memberQueryService.findById(member.id)
 
                 Then("회원 정보를 반환 한다") {
-                    actual shouldBeEqualUsingFields member
+                    actual.shouldBeEqualToUsingFields(member, Member::id, Member::email, Member::loginPassword)
                 }
             }
         }

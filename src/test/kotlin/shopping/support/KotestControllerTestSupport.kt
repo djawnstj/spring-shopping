@@ -21,8 +21,9 @@ import org.springframework.test.web.servlet.ResultActions
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import shopping.auth.application.JwtAuthenticationFilter
 import shopping.auth.application.JwtService
-import shopping.auth.application.TokenRepository
+import shopping.auth.application.TokenQueryRepository
 import shopping.global.config.SecurityConfig
+import shopping.global.exception.ErrorCode
 import shopping.member.application.MemberCommandService
 import shopping.member.application.MemberQueryRepository
 import shopping.member.application.MemberQueryService
@@ -63,7 +64,7 @@ abstract class KotestControllerTestSupport: BehaviorSpec() {
     @MockkBean
     private lateinit var accessDeniedHandler: AccessDeniedHandler
     @MockkBean
-    private lateinit var tokenRepository: TokenRepository
+    private lateinit var tokenRepository: TokenQueryRepository
 
     @MockkBean
     protected lateinit var memberCommandService: MemberCommandService
@@ -85,6 +86,8 @@ abstract class KotestControllerTestSupport: BehaviorSpec() {
             MockMvcResultMatchers.jsonPath("$.meta.message").value(status.reasonPhrase)
         )
 
-    protected fun ResultActions.isOkResponse(): ResultActions = isStatusAs(HttpStatus.OK)
+    protected fun ResultActions.isInvalidInputValueResponse(message: String): ResultActions =
+        this.andExpect(MockMvcResultMatchers.jsonPath("$.meta.code").value(ErrorCode.INVALID_INPUT_VALUE.status.value()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.meta.message").value(message))
 
 }

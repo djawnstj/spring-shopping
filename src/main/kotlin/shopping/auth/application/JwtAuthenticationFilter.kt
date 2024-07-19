@@ -9,41 +9,53 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.web.filter.OncePerRequestFilter
+import shopping.auth.domain.AuthenticationCredentials
 
 class JwtAuthenticationFilter(
     private val jwtService: JwtService,
     private val userDetailsService: UserDetailsService,
-    private val tokenRepository: TokenRepository,
+    private val tokenQueryRepository: TokenQueryRepository,
 ): OncePerRequestFilter() {
 
     public override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
-
-        if (request.servletPath.contains(AUTH_URL)) {
+        if (isByPassUrl(request)) {
             filterChain.doFilter(request, response)
             return
         }
 
-        val authHeader = request.getHeader("Authorization")
-        if (authHeader == null || !authHeader.startsWith(BEARER_HEADER_PREFIX)) {
+        val authHeader: String? = request.getHeader("Authorization")
+        if (isInvalidBearerHeader(authHeader)) {
             filterChain.doFilter(request, response)
             return
         }
 
-        val jwt = authHeader.substring(7)
-        val username = jwtService.getUsername(jwt)
-        val jti = jwtService.getJti(jwt)
-        val authenticationCredentials = tokenRepository.findByJti(jti)
-
-        if (authenticationCredentials?.accessToken == jwt && SecurityContextHolder.getContext().authentication == null) {
-            val userDetails = userDetailsService.loadUserByUsername(username)
-
-            if (jwtService.isTokenValid(jwt, userDetails)) {
-                updateContext(userDetails, request)
-            }
-        }
+        setSecurityContext(authHeader, request)
 
         filterChain.doFilter(request, response)
     }
+
+    private fun isInvalidBearerHeader(authHeader: String?) = authHeader == null || !authHeader.startsWith(BEARER_HEADER_PREFIX)
+
+    private fun isByPassUrl(request: HttpServletRequest) = request.servletPath.contains(AUTH_URL)
+
+    private fun setSecurityContext(authHeader: String?, request: HttpServletRequest) {
+        val jwt = authHeader!!.substring(7)
+        val username = jwtService.getUsername(jwt)
+        val authenticationCredentials = tokenQueryRepository.findByJti(jwtService.getJti(jwt))
+
+        if (isImpossibleSetSecurityContext(authenticationCredentials, jwt)) {
+            return
+        }
+
+        val userDetails = userDetailsService.loadUserByUsername(username)
+
+        if (jwtService.isTokenValid(jwt, userDetails)) {
+            updateContext(userDetails, request)
+        }
+    }
+
+    private fun isImpossibleSetSecurityContext(authenticationCredentials: AuthenticationCredentials?, jwt: String): Boolean =
+        authenticationCredentials?.accessToken != jwt || SecurityContextHolder.getContext().authentication != null
 
     private fun updateContext(userDetails: UserDetails, request: HttpServletRequest) =
         UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)

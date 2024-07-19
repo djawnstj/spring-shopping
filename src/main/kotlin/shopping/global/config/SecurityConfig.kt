@@ -5,8 +5,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
+import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -24,8 +26,8 @@ import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector
 import shopping.auth.application.JwtAuthenticationFilter
 import shopping.auth.application.JwtService
-import shopping.auth.application.TokenRepository
-import shopping.auth.infra.JwtProperties
+import shopping.auth.application.TokenQueryRepository
+import shopping.auth.application.JwtProperties
 import shopping.member.application.MemberQueryRepository
 
 @Configuration
@@ -55,11 +57,14 @@ class SecurityConfig(
     }
 
     @Bean
-    fun jwtAuthenticationFilter(userDetailsService: UserDetailsService, tokenRepository: TokenRepository): JwtAuthenticationFilter =
+    fun jwtAuthenticationFilter(userDetailsService: UserDetailsService, tokenRepository: TokenQueryRepository): JwtAuthenticationFilter =
         JwtAuthenticationFilter(jwtService, userDetailsService, tokenRepository)
 
     @Bean
     fun mvcRequestMatcherBuilder(introspector: HandlerMappingIntrospector): MvcRequestMatcher.Builder = MvcRequestMatcher.Builder(introspector)
+
+    @Bean
+    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager = config.authenticationManager
 
     @Bean
     fun securityFilterChain(
@@ -103,7 +108,7 @@ class SecurityConfig(
         WHITE_LIST_URLS.map { createMvcRequestMatcher(it, mvc) }.toTypedArray()
 
     companion object {
-        private val WHITE_LIST_URLS = arrayOf("/api/v1/auth/**", "/error")
+        private val WHITE_LIST_URLS = arrayOf("/api/auth/**", "/error")
     }
 
 }
