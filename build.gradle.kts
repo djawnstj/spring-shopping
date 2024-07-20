@@ -7,8 +7,6 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
-
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
 }
 
 allOpen {
@@ -91,10 +89,4 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-tasks {
-    ktlint {
-        verbose.set(true)
-    }
 }
