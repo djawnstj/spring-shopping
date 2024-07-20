@@ -1,6 +1,5 @@
 package shopping.auth.application
 
-import io.jsonwebtoken.Jwts
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeBlank
@@ -8,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import shopping.member.application.MemberCommandRepository
 import shopping.member.fixture.MemberFixture
 import shopping.support.KotestIntegrationTestSupport
-import java.util.Date
+import java.util.*
 
 class TokenProviderTest: KotestIntegrationTestSupport() {
     @Autowired

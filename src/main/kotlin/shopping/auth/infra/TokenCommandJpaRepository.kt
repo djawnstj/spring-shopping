@@ -23,6 +23,4 @@ class TokenCommandJpaRepository(
             )
         }
     }
-
-    override fun delete(authenticationCredentials: AuthenticationCredentials) = tokenJpaRepository.delete(authenticationCredentials)
 }

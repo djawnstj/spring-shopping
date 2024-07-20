@@ -14,7 +14,7 @@ import shopping.member.application.MemberQueryRepository
 import shopping.member.domain.Member
 
 @Service
-@Transactional(readOnly = true)
+@Transactional
 class AuthenticationCommandService(
     private val tokenCommandRepository: TokenCommandRepository,
     private val tokenQueryRepository: TokenQueryRepository,
@@ -23,7 +23,6 @@ class AuthenticationCommandService(
     private val authenticationManager: AuthenticationManager,
 ) {
 
-    @Transactional
     fun logIn(loginCommand: LoginCommand): AuthenticationCredentials {
         val member: Member = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(loginCommand.email, loginCommand.loginPassword)
@@ -36,10 +35,8 @@ class AuthenticationCommandService(
         return authenticationCredentials
     }
 
-    // TODO 기존 토큰 어떻게 삭제?
-    @Transactional
-    fun refreshToken(request: TokenRefreshCommand): AuthenticationCredentials {
-        val presentedRefreshToken = request.refreshToken
+    fun refreshToken(tokenRefreshCommand: TokenRefreshCommand): AuthenticationCredentials {
+        val presentedRefreshToken = tokenRefreshCommand.refreshToken
 
         val member = memberQueryRepository.findByEmailAndNotDeleted(jwtService.getUsername(presentedRefreshToken))
 
@@ -49,7 +46,7 @@ class AuthenticationCommandService(
         val authenticationCredentials = jwtService.generateAuthenticationCredentials(member!!)
 
         tokenCommandRepository.save(authenticationCredentials)
-        tokenCommandRepository.delete(foundToken!!)
+        tokenCommandRepository.deleteByJti(foundToken!!.jti)
 
         return authenticationCredentials
     }

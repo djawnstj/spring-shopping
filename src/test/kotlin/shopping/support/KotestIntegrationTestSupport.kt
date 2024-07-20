@@ -4,17 +4,27 @@ import io.kotest.core.extensions.Extension
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.mockk.clearAllMocks
-import io.mockk.clearMocks
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.test.web.server.LocalServerPort
 
-@SpringBootTest
-class KotestIntegrationTestSupport: BehaviorSpec() {
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+abstract class KotestIntegrationTestSupport: BehaviorSpec() {
 
+    @LocalServerPort
+    protected var port: Int = -1
+
+    @Autowired
+    protected lateinit var restTemplate: TestRestTemplate
     @Autowired
     private lateinit var cleanUp: InfraCleanUp
 
     init {
+        beforeContainer {
+            clearAllMocks()
+        }
+
         afterEach {
             cleanUp.all()
         }

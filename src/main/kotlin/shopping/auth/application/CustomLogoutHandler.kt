@@ -1,4 +1,4 @@
-package shopping.auth.presentation
+package shopping.auth.application
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
@@ -7,9 +7,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.logout.LogoutHandler
 import org.springframework.stereotype.Service
-import shopping.auth.application.JwtService
-import shopping.auth.application.TokenCommandRepository
-import shopping.auth.application.TokenQueryRepository
 import shopping.global.common.ErrorResponse
 import shopping.global.exception.ErrorCode
 

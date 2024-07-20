@@ -1,4 +1,4 @@
-package shopping.auth.presentation
+package shopping.auth.application
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

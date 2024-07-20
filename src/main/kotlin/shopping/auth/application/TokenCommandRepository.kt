@@ -6,6 +6,4 @@ interface TokenCommandRepository {
     fun save(authenticationCredentials: AuthenticationCredentials): AuthenticationCredentials
 
     fun deleteByJti(jti: String)
-
-    fun delete(authenticationCredentials: AuthenticationCredentials)
 }
