@@ -1,19 +1,17 @@
 package shopping.auth.application
 
 import io.kotest.core.annotation.DisplayName
-import io.kotest.matchers.nulls.shouldBeNull
-import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.repository.findByIdOrNull
 import shopping.auth.fixture.TokenFixture
 import shopping.auth.infra.TokenJpaRepository
 import shopping.support.KotestIntegrationTestSupport
 
 @DisplayName("TokenCommandRepository 테스트")
-class TokenCommandRepositoryTest: KotestIntegrationTestSupport() {
+class TokenCommandRepositoryTest : KotestIntegrationTestSupport() {
     @Autowired
     private lateinit var repository: TokenCommandRepository
+
     @Autowired
     private lateinit var tokenJpaRepository: TokenJpaRepository
 

@@ -10,13 +10,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate
 import org.springframework.boot.test.web.server.LocalServerPort
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-abstract class KotestIntegrationTestSupport: BehaviorSpec() {
-
+abstract class KotestIntegrationTestSupport : BehaviorSpec() {
     @LocalServerPort
     protected var port: Int = -1
 
     @Autowired
     protected lateinit var restTemplate: TestRestTemplate
+
     @Autowired
     private lateinit var cleanUp: InfraCleanUp
 

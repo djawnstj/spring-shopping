@@ -6,5 +6,4 @@ import org.springframework.stereotype.Repository
 import shopping.auth.domain.AuthenticationCredentials
 
 @Repository
-interface TokenJpaRepository: JpaRepository<AuthenticationCredentials, Long>, KotlinJdslJpqlExecutor {
-}
+interface TokenJpaRepository : JpaRepository<AuthenticationCredentials, Long>, KotlinJdslJpqlExecutor

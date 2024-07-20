@@ -11,12 +11,13 @@ import shopping.member.fixture.MemberFixture
 import shopping.support.KotestIntegrationTestSupport
 
 @DisplayName("JwtService 통합 테스트")
-class JwtServiceIntegrationTest: KotestIntegrationTestSupport() {
+class JwtServiceIntegrationTest : KotestIntegrationTestSupport() {
     @Autowired
     private lateinit var jwtService: JwtService
 
     @Autowired
     private lateinit var memberCommandRepository: MemberCommandRepository
+
     @Autowired
     private lateinit var tokenProvider: TokenProvider
 

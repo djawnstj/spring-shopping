@@ -13,14 +13,16 @@ import shopping.member.fixture.MemberFixture
 import shopping.support.KotestIntegrationTestSupport
 
 @DisplayName("CustomLogoutHandler 통합 테스트")
-class CustomLogoutHandlerIntegrationTest: KotestIntegrationTestSupport() {
-
+class CustomLogoutHandlerIntegrationTest : KotestIntegrationTestSupport() {
     @Autowired
     private lateinit var memberCommandRepository: MemberCommandRepository
+
     @Autowired
     private lateinit var jwtService: JwtService
+
     @Autowired
     private lateinit var tokenCommandRepository: TokenCommandRepository
+
     @Autowired
     private lateinit var tokenQueryRepository: TokenQueryRepository
 
@@ -31,7 +33,8 @@ class CustomLogoutHandlerIntegrationTest: KotestIntegrationTestSupport() {
             val jti = authenticationCredentials.jti
             tokenCommandRepository.save(authenticationCredentials)
 
-            val request = HttpHeaders().apply { set("Authorization", "Bearer ${authenticationCredentials.accessToken}") }
+            val request =
+                HttpHeaders().apply { set("Authorization", "Bearer ${authenticationCredentials.accessToken}") }
             val httpEntity = HttpEntity<String>("", request)
 
             When("email 과 loginPassword 를 이용해 로그아웃을 진행한 후") {
@@ -48,5 +51,4 @@ class CustomLogoutHandlerIntegrationTest: KotestIntegrationTestSupport() {
             }
         }
     }
-
 }

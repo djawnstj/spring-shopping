@@ -1,15 +1,11 @@
 package shopping.auth.application
 
 import io.kotest.core.annotation.DisplayName
-import io.kotest.core.annotation.Ignored
 import io.kotest.core.spec.style.BehaviorSpec
-import io.mockk.clearAllMocks
-import io.mockk.clearStaticMockk
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.unmockkStatic
 import io.mockk.verify
 import jakarta.servlet.FilterChain
 import org.springframework.mock.web.MockHttpServletRequest
@@ -22,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import shopping.auth.domain.AuthenticationCredentials
 
 @DisplayName("JwtAuthenticationFilter 테스트")
-class JwtAuthenticationFilterTest: BehaviorSpec({
+class JwtAuthenticationFilterTest : BehaviorSpec({
     val jwtService: JwtService = mockk()
     val userDetailsService: UserDetailsService = mockk()
     val tokenQueryRepository: TokenQueryRepository = mockk()
@@ -198,5 +194,4 @@ class JwtAuthenticationFilterTest: BehaviorSpec({
             }
         }
     }
-
 })

@@ -5,7 +5,6 @@ import java.util.Date
 import javax.crypto.SecretKey
 
 interface TokenProvider {
-
     val secretKey: SecretKey
 
     fun extractUsername(token: String): String?
@@ -14,6 +13,10 @@ interface TokenProvider {
 
     fun extractExpiration(token: String): Date?
 
-    fun buildToken(userDetails: UserDetails, jti: String, expiration: Long, additionalClaims: Map<String, Any> = emptyMap()): String
-
+    fun buildToken(
+        userDetails: UserDetails,
+        jti: String,
+        expiration: Long,
+        additionalClaims: Map<String, Any> = emptyMap(),
+    ): String
 }

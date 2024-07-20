@@ -12,19 +12,19 @@ import shopping.member.fixture.MemberFixture
 import shopping.support.KotestControllerTestSupport
 
 @DisplayName("AuthenticationApi 테스트")
-class AuthenticationApiTest: KotestControllerTestSupport() {
-
+class AuthenticationApiTest : KotestControllerTestSupport() {
     init {
         Given("로그인 요청이 왔을 때") {
 
             When("올바른 이메일과 비밀번호로 요청이 오면") {
                 every { authenticationCommandService.logIn(any()) } returns TokenFixture.`토큰 1`.`토큰 엔티티 생성`()
 
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/auth/login")
-                        .content(objectMapper.writeValueAsBytes(MemberFixture.`고객 1`.`로그인 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/auth/login")
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`고객 1`.`로그인 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("200 상태 코드를 반환 한다") {
                     response.isStatusAs(HttpStatus.OK)
@@ -40,11 +40,12 @@ class AuthenticationApiTest: KotestControllerTestSupport() {
             }
 
             When("이메일이 공백인 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/auth/login")
-                        .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 공백 회원`.`로그인 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/auth/login")
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 공백 회원`.`로그인 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -56,11 +57,12 @@ class AuthenticationApiTest: KotestControllerTestSupport() {
             }
 
             When("이메일이 null 인 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/auth/login")
-                        .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 NULL 회원`.`로그인 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/auth/login")
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 NULL 회원`.`로그인 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -72,11 +74,12 @@ class AuthenticationApiTest: KotestControllerTestSupport() {
             }
 
             When("이메일이 형식이 올바르지 않은 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/auth/login")
-                        .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 비정상 회원`.`로그인 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/auth/login")
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 비정상 회원`.`로그인 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -88,11 +91,12 @@ class AuthenticationApiTest: KotestControllerTestSupport() {
             }
 
             When("비밀번호가 공백인 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/auth/login")
-                        .content(objectMapper.writeValueAsBytes(MemberFixture.`비밀번호 공백 회원`.`로그인 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/auth/login")
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`비밀번호 공백 회원`.`로그인 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -100,16 +104,16 @@ class AuthenticationApiTest: KotestControllerTestSupport() {
 
                 Then("비밀번호 검증 실패 메시지를 반환 한다") {
                     response.isInvalidInputValueResponse("비밀번호는 필수로 입력하셔야 합니다.")
-
                 }
             }
 
             When("비밀번호가 null 인 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/auth/login")
-                        .content(objectMapper.writeValueAsBytes(MemberFixture.`비밀번호 NULL 회원`.`로그인 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/auth/login")
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`비밀번호 NULL 회원`.`로그인 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -117,7 +121,6 @@ class AuthenticationApiTest: KotestControllerTestSupport() {
 
                 Then("비밀번호 검증 실패 메시지를 반환 한다") {
                     response.isInvalidInputValueResponse("비밀번호는 필수로 입력하셔야 합니다.")
-
                 }
             }
         }
@@ -127,11 +130,12 @@ class AuthenticationApiTest: KotestControllerTestSupport() {
             When("토큰이 공백이 아니라면") {
                 every { authenticationCommandService.refreshToken(any()) } returns TokenFixture.`토큰 2`.`토큰 엔티티 생성`()
 
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/auth/refresh")
-                        .content(objectMapper.writeValueAsBytes(TokenFixture.`토큰 1`.`토큰 재발급 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/auth/refresh")
+                            .content(objectMapper.writeValueAsBytes(TokenFixture.`토큰 1`.`토큰 재발급 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("200 상태 코드를 반환 한다") {
                     response.isStatusAs(HttpStatus.OK)
@@ -146,11 +150,12 @@ class AuthenticationApiTest: KotestControllerTestSupport() {
             }
 
             When("토큰이 공백인 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/auth/refresh")
-                        .content(objectMapper.writeValueAsBytes(TokenFixture.`REFRESH TOKEN 공백`.`토큰 재발급 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/auth/refresh")
+                            .content(objectMapper.writeValueAsBytes(TokenFixture.`REFRESH TOKEN 공백`.`토큰 재발급 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -162,11 +167,12 @@ class AuthenticationApiTest: KotestControllerTestSupport() {
             }
 
             When("토큰이 null 인 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/auth/refresh")
-                        .content(objectMapper.writeValueAsBytes(TokenFixture.`REFRESH TOKEN NULL`.`토큰 재발급 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/auth/refresh")
+                            .content(objectMapper.writeValueAsBytes(TokenFixture.`REFRESH TOKEN NULL`.`토큰 재발급 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -178,5 +184,4 @@ class AuthenticationApiTest: KotestControllerTestSupport() {
             }
         }
     }
-
 }

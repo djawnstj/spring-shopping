@@ -2,7 +2,6 @@ package shopping.member.application
 
 import io.kotest.core.annotation.DisplayName
 import io.kotest.matchers.equality.shouldBeEqualToUsingFields
-import io.kotest.matchers.equality.shouldBeEqualUsingFields
 import org.springframework.beans.factory.annotation.Autowired
 import shopping.member.domain.Member
 import shopping.member.fixture.MemberFixture
@@ -10,9 +9,10 @@ import shopping.member.infra.MemberJpaRepository
 import shopping.support.KotestIntegrationTestSupport
 
 @DisplayName("MemberQueryService 통합 테스트")
-class MemberQueryServiceIntegrationTest: KotestIntegrationTestSupport() {
+class MemberQueryServiceIntegrationTest : KotestIntegrationTestSupport() {
     @Autowired
     private lateinit var memberQueryService: MemberQueryService
+
     @Autowired
     private lateinit var memberJpaRepository: MemberJpaRepository
 

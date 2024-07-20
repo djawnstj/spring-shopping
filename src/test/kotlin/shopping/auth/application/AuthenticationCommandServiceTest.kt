@@ -20,7 +20,7 @@ import shopping.member.domain.Member
 import shopping.member.fixture.MemberFixture
 
 @DisplayName("AuthenticationCommandService 테스트")
-class AuthenticationCommandServiceTest: BehaviorSpec({
+class AuthenticationCommandServiceTest : BehaviorSpec({
 
     val tokenCommandRepository: TokenCommandRepository = mockk()
     val tokenQueryRepository: TokenQueryRepository = mockk()
@@ -28,7 +28,14 @@ class AuthenticationCommandServiceTest: BehaviorSpec({
     val jwtService: JwtService = mockk()
     val authenticationManager: AuthenticationManager = mockk()
 
-    val authenticationCommandService = AuthenticationCommandService(tokenCommandRepository, tokenQueryRepository, memberQueryRepository, jwtService, authenticationManager)
+    val authenticationCommandService =
+        AuthenticationCommandService(
+            tokenCommandRepository,
+            tokenQueryRepository,
+            memberQueryRepository,
+            jwtService,
+            authenticationManager,
+        )
 
     Given("로그인 요청 시") {
         val loginCommand = MemberFixture.`고객 1`.`로그인 COMMAND 생성`()
@@ -70,7 +77,7 @@ class AuthenticationCommandServiceTest: BehaviorSpec({
         val jti = "jti"
         val originAuthenticationCredentials = tokenFixture.`토큰 엔티티 생성`()
         val newAuthenticationCredentials = TokenFixture.`토큰 2`.`토큰 엔티티 생성`()
-        
+
         When("전달 받은 refreshToken 상태가 정상적이라면") {
             every { jwtService.getUsername(originAuthenticationCredentials.refreshToken) } returns email!!
             every { jwtService.getJti(originAuthenticationCredentials.refreshToken) } returns jti
@@ -85,7 +92,8 @@ class AuthenticationCommandServiceTest: BehaviorSpec({
             val actual = authenticationCommandService.refreshToken(tokenRefreshCommand)
 
             Then("새로운 accessToken 을 반환 한다") {
-                actual.shouldNotBeEqualUsingFields(originAuthenticationCredentials).shouldBeEqualUsingFields(newAuthenticationCredentials)
+                actual.shouldNotBeEqualUsingFields(originAuthenticationCredentials)
+                    .shouldBeEqualUsingFields(newAuthenticationCredentials)
             }
         }
 
@@ -129,7 +137,7 @@ class AuthenticationCommandServiceTest: BehaviorSpec({
 
         When("전달 받은 refreshToken 이 유효하지 않다면") {
             every { jwtService.getUsername(originAuthenticationCredentials.refreshToken) } returns email!!
-            every { jwtService.getJti(originAuthenticationCredentials. refreshToken) } returns jti
+            every { jwtService.getJti(originAuthenticationCredentials.refreshToken) } returns jti
             every { memberQueryRepository.findByEmailAndNotDeleted(email) } returns member
             every { tokenQueryRepository.findByJti(jti) } returns originAuthenticationCredentials
             every { jwtService.isTokenValid(originAuthenticationCredentials.refreshToken, member) } returns false
@@ -139,7 +147,6 @@ class AuthenticationCommandServiceTest: BehaviorSpec({
                     authenticationCommandService.refreshToken(tokenRefreshCommand)
                 }.message shouldBe "리프레시 토큰이 유효하지 않습니다."
             }
-
         }
 
         When("전달 받은 토큰의 jti 로 찾은 accessToken 의 만료시간이 지나지 않았다면") {

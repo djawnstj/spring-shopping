@@ -10,7 +10,7 @@ import shopping.global.exception.ApplicationException
 import shopping.member.fixture.MemberFixture
 
 @DisplayName("MemberQueryService 테스트")
-class MemberQueryServiceTest: BehaviorSpec({
+class MemberQueryServiceTest : BehaviorSpec({
 
     val memberQueryRepository: MemberQueryRepository = mockk()
     val memberQueryService = MemberQueryService(memberQueryRepository)
@@ -38,7 +38,5 @@ class MemberQueryServiceTest: BehaviorSpec({
                 }.message shouldBe "일치하는 회원 정보를 찾을 수 없습니다."
             }
         }
-
     }
-
 })

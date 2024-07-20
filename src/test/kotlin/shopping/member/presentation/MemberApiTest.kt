@@ -12,7 +12,6 @@ import shopping.support.KotestControllerTestSupport
 
 @DisplayName("MemberApi 테스트")
 class MemberApiTest : KotestControllerTestSupport() {
-
     init {
         Given("회원 가입 성공 - 회원 가입 요청 시 정상 적인 이메일, 비밀번호를 받아") {
             val memberFixture = MemberFixture.`고객 1`
@@ -22,11 +21,12 @@ class MemberApiTest : KotestControllerTestSupport() {
                 every { memberCommandService.createMember(any()) } returns 1L
                 every { memberQueryService.findById(any()) } returns member
 
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/members")
-                        .content(objectMapper.writeValueAsBytes(memberFixture.`회원 가입 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/members")
+                            .content(objectMapper.writeValueAsBytes(memberFixture.`회원 가입 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("201 상태 코드를 반환 한다") {
                     response.isStatusAs(HttpStatus.CREATED)
@@ -45,11 +45,12 @@ class MemberApiTest : KotestControllerTestSupport() {
         Given("회원 가입 실패 - 회원 가입 요청 시") {
 
             When("이메일이 공백인 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/members")
-                        .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 공백 회원`.`회원 가입 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/members")
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 공백 회원`.`회원 가입 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -61,11 +62,12 @@ class MemberApiTest : KotestControllerTestSupport() {
             }
 
             When("이메일이 null 인 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/members")
-                        .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 NULL 회원`.`회원 가입 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/members")
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 NULL 회원`.`회원 가입 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -77,11 +79,12 @@ class MemberApiTest : KotestControllerTestSupport() {
             }
 
             When("이메일이 형식이 올바르지 않은 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/members")
-                        .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 비정상 회원`.`회원 가입 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/members")
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`이메일 비정상 회원`.`회원 가입 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -93,11 +96,12 @@ class MemberApiTest : KotestControllerTestSupport() {
             }
 
             When("비밀번호가 공백인 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/members")
-                        .content(objectMapper.writeValueAsBytes(MemberFixture.`비밀번호 공백 회원`.`회원 가입 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/members")
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`비밀번호 공백 회원`.`회원 가입 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -105,16 +109,16 @@ class MemberApiTest : KotestControllerTestSupport() {
 
                 Then("비밀번호 검증 실패 메시지를 반환 한다") {
                     response.isInvalidInputValueResponse("비밀번호는 필수로 입력하셔야 합니다.")
-
                 }
             }
 
             When("비밀번호가 null 인 경우") {
-                val response = mockMvc.perform(
-                    MockMvcRequestBuilders.post("/api/members")
-                        .content(objectMapper.writeValueAsBytes(MemberFixture.`비밀번호 NULL 회원`.`회원 가입 요청 DTO 생성`()))
-                        .contentType(MediaType.APPLICATION_JSON)
-                ).andDo(MockMvcResultHandlers.print())
+                val response =
+                    mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/members")
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`비밀번호 NULL 회원`.`회원 가입 요청 DTO 생성`()))
+                            .contentType(MediaType.APPLICATION_JSON),
+                    ).andDo(MockMvcResultHandlers.print())
 
                 Then("400 상태 코드를 반환 한다") {
                     response.andExpect(MockMvcResultMatchers.status().isBadRequest)
@@ -122,7 +126,6 @@ class MemberApiTest : KotestControllerTestSupport() {
 
                 Then("비밀번호 검증 실패 메시지를 반환 한다") {
                     response.isInvalidInputValueResponse("비밀번호는 필수로 입력하셔야 합니다.")
-
                 }
             }
         }

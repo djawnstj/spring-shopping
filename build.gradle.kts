@@ -7,6 +7,8 @@ plugins {
     kotlin("jvm") version kotlinVersion
     kotlin("plugin.spring") version kotlinVersion
     kotlin("plugin.jpa") version kotlinVersion
+
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
 }
 
 allOpen {
@@ -76,9 +78,9 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
 
     // JWT
-    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
-    implementation("io.jsonwebtoken:jjwt-impl:0.12.3")
-    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.6")
+    implementation("io.jsonwebtoken:jjwt-impl:0.12.6")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 }
 
 kotlin {
@@ -89,4 +91,10 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks {
+    ktlint {
+        verbose.set(true)
+    }
 }

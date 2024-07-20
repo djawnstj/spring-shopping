@@ -40,14 +40,20 @@ class JwtService(
         return AuthenticationCredentials(jti, accessToken, refreshToken)
     }
 
-    fun generateAccessToken(userDetails: UserDetails, jti: String): String =
-        tokenProvider.buildToken(userDetails, jti, jwtProperties.accessTokenExpiration)
+    fun generateAccessToken(
+        userDetails: UserDetails,
+        jti: String,
+    ): String = tokenProvider.buildToken(userDetails, jti, jwtProperties.accessTokenExpiration)
 
-    fun generateRefreshToken(userDetails: UserDetails, jti: String): String =
-        tokenProvider.buildToken(userDetails, jti, jwtProperties.refreshTokenExpiration)
+    fun generateRefreshToken(
+        userDetails: UserDetails,
+        jti: String,
+    ): String = tokenProvider.buildToken(userDetails, jti, jwtProperties.refreshTokenExpiration)
 
-    fun isTokenValid(token: String, userDetails: UserDetails): Boolean =
-        (getUsername(token) == userDetails.username) && isTokenActive(token)
+    fun isTokenValid(
+        token: String,
+        userDetails: UserDetails,
+    ): Boolean = (getUsername(token) == userDetails.username) && isTokenActive(token)
 
     private fun isTokenActive(token: String): Boolean {
         tokenProvider.extractExpiration(token)?.let {
@@ -84,5 +90,4 @@ class JwtService(
 
         throw ApplicationException(ErrorCode.INVALID_ACCESS_TOKEN)
     }
-
 }

@@ -22,11 +22,11 @@ class AuthenticationCommandService(
     private val jwtService: JwtService,
     private val authenticationManager: AuthenticationManager,
 ) {
-
     fun logIn(loginCommand: LoginCommand): AuthenticationCredentials {
-        val member: Member = authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(loginCommand.email, loginCommand.loginPassword)
-        ).principal as Member
+        val member: Member =
+            authenticationManager.authenticate(
+                UsernamePasswordAuthenticationToken(loginCommand.email, loginCommand.loginPassword),
+            ).principal as Member
 
         val authenticationCredentials = jwtService.generateAuthenticationCredentials(member)
 
@@ -51,14 +51,18 @@ class AuthenticationCommandService(
         return authenticationCredentials
     }
 
-    private fun validateToken(authenticationCredentials: AuthenticationCredentials?, jwt: String, member: Member?) {
+    private fun validateToken(
+        authenticationCredentials: AuthenticationCredentials?,
+        refreshToken: String,
+        member: Member?,
+    ) {
         if (authenticationCredentials == null) {
             throw ApplicationException(ErrorCode.TOKEN_NOT_FOUND)
         }
 
         validateMember(member)
 
-        validateRefreshToken(jwt, authenticationCredentials.refreshToken, member!!)
+        validateRefreshToken(authenticationCredentials, refreshToken, member!!)
 
         validateActiveAccessToken(authenticationCredentials.accessToken, authenticationCredentials.jti)
     }
@@ -69,19 +73,25 @@ class AuthenticationCommandService(
         }
     }
 
-    private fun validateRefreshToken(jwt: String, refreshToken: String, user: UserDetails) {
-        if (jwt != refreshToken) throw ApplicationException(ErrorCode.MISS_MATCH_TOKEN)
-        if (!jwtService.isTokenValid(jwt, user)) throw ApplicationException(ErrorCode.INVALID_REFRESH_TOKEN)
+    private fun validateRefreshToken(
+        authenticationCredentials: AuthenticationCredentials,
+        refreshToken: String,
+        user: UserDetails,
+    ) {
+        authenticationCredentials.validateRefreshToken(refreshToken)
+
+        if (!jwtService.isTokenValid(refreshToken, user)) {
+            throw ApplicationException(ErrorCode.INVALID_REFRESH_TOKEN)
+        }
     }
 
-    private fun validateActiveAccessToken(accessToken: String, jti: String) {
+    private fun validateActiveAccessToken(
+        accessToken: String,
+        jti: String,
+    ) {
         if (!jwtService.checkTokenExpiredByTokenString(accessToken)) {
             tokenCommandRepository.deleteByJti(jti)
             throw ApplicationException(ErrorCode.INVALID_TOKEN_REISSUE_REQUEST)
         }
     }
-
 }
-
-
-

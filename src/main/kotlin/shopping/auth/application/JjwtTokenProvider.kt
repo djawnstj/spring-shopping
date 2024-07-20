@@ -10,9 +10,8 @@ import javax.crypto.SecretKey
 
 @Component
 class JjwtTokenProvider(
-    jwtProperties: JwtProperties
-): TokenProvider {
-
+    jwtProperties: JwtProperties,
+) : TokenProvider {
     override val secretKey: SecretKey = Keys.hmacShaKeyFor(jwtProperties.key.toByteArray())
 
     override fun extractUsername(token: String): String? = extractAllClaims(token)?.subject
@@ -28,7 +27,12 @@ class JjwtTokenProvider(
             .parseSignedClaims(token)
             .payload
 
-    override fun buildToken(userDetails: UserDetails, jti: String, expiration: Long, additionalClaims: Map<String, Any>): String =
+    override fun buildToken(
+        userDetails: UserDetails,
+        jti: String,
+        expiration: Long,
+        additionalClaims: Map<String, Any>,
+    ): String =
         Jwts.builder()
             .claims()
             .subject(userDetails.username)

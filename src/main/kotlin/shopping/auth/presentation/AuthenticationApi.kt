@@ -12,15 +12,15 @@ import shopping.auth.presentation.dto.response.TokenRefreshResponse
 import shopping.global.common.SuccessResponse
 
 @RestController
-class AuthenticationApi(
-    private val authenticationCommandService: AuthenticationCommandService
-) {
-
+class AuthenticationApi(private val authenticationCommandService: AuthenticationCommandService) {
     @PostMapping("/api/auth/login")
-    fun logIn(@RequestBody @Valid request: LoginRequest): SuccessResponse<LoginResponse> =
-        SuccessResponse(LoginResponse(authenticationCommandService.logIn(request.toCommand())))
+    fun logIn(
+        @RequestBody @Valid request: LoginRequest,
+    ): SuccessResponse<LoginResponse> = SuccessResponse(LoginResponse(authenticationCommandService.logIn(request.toCommand())))
 
     @PostMapping("/api/auth/refresh")
-    fun refresh(@RequestBody @Valid request: TokenRefreshRequest): SuccessResponse<TokenRefreshResponse> =
+    fun refresh(
+        @RequestBody @Valid request: TokenRefreshRequest,
+    ): SuccessResponse<TokenRefreshResponse> =
         SuccessResponse(TokenRefreshResponse(authenticationCommandService.refreshToken(request.toCommand())))
 }

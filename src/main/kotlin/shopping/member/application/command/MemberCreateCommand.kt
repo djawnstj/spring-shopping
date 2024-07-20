@@ -9,5 +9,5 @@ data class MemberCreateCommand(
     val loginPassword: String,
     val memberType: MemberType,
 ) {
-    fun toEntity(passwordEncoder: PasswordEncoder): Member = Member(email, loginPassword, memberType)
+    fun toEntity(passwordEncoder: PasswordEncoder): Member = Member(email, passwordEncoder.encode(loginPassword), memberType)
 }

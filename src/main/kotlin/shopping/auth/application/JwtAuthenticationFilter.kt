@@ -15,9 +15,12 @@ class JwtAuthenticationFilter(
     private val jwtService: JwtService,
     private val userDetailsService: UserDetailsService,
     private val tokenQueryRepository: TokenQueryRepository,
-): OncePerRequestFilter() {
-
-    public override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
+) : OncePerRequestFilter() {
+    public override fun doFilterInternal(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        filterChain: FilterChain,
+    ) {
         if (isByPassUrl(request)) {
             filterChain.doFilter(request, response)
             return
@@ -38,7 +41,10 @@ class JwtAuthenticationFilter(
 
     private fun isByPassUrl(request: HttpServletRequest) = request.servletPath.contains(AUTH_URL)
 
-    private fun setSecurityContext(authHeader: String?, request: HttpServletRequest) {
+    private fun setSecurityContext(
+        authHeader: String?,
+        request: HttpServletRequest,
+    ) {
         val jwt = authHeader!!.substring(7)
         val username = jwtService.getUsername(jwt)
         val authenticationCredentials = tokenQueryRepository.findByJti(jwtService.getJti(jwt))
@@ -54,19 +60,22 @@ class JwtAuthenticationFilter(
         }
     }
 
-    private fun isImpossibleSetSecurityContext(authenticationCredentials: AuthenticationCredentials?, jwt: String): Boolean =
-        authenticationCredentials?.accessToken != jwt || SecurityContextHolder.getContext().authentication != null
+    private fun isImpossibleSetSecurityContext(
+        authenticationCredentials: AuthenticationCredentials?,
+        jwt: String,
+    ): Boolean = authenticationCredentials?.accessToken != jwt || SecurityContextHolder.getContext().authentication != null
 
-    private fun updateContext(userDetails: UserDetails, request: HttpServletRequest) =
-        UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
-            .also {
-                it.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = it
-            }
+    private fun updateContext(
+        userDetails: UserDetails,
+        request: HttpServletRequest,
+    ) = UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+        .also {
+            it.details = WebAuthenticationDetailsSource().buildDetails(request)
+            SecurityContextHolder.getContext().authentication = it
+        }
 
     companion object {
         private const val AUTH_URL = "/api/auth"
         private const val BEARER_HEADER_PREFIX = "Bearer "
     }
-
 }

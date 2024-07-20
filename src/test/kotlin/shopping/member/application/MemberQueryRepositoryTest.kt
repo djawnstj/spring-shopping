@@ -10,10 +10,10 @@ import shopping.member.infra.MemberJpaRepository
 import shopping.support.KotestIntegrationTestSupport
 
 @DisplayName("MemberQueryRepository 테스트")
-class MemberQueryRepositoryTest: KotestIntegrationTestSupport() {
-
+class MemberQueryRepositoryTest : KotestIntegrationTestSupport() {
     @Autowired
     private lateinit var memberQueryRepository: MemberQueryRepository
+
     @Autowired
     private lateinit var memberJpaRepository: MemberJpaRepository
 

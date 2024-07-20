@@ -9,11 +9,11 @@ typealias ErrorResponse = Response<*>
 
 data class Response<T>(
     val meta: Meta,
-    val data: T?
+    val data: T?,
 ) {
     data class Meta(
         val code: Int,
-        val message: String
+        val message: String,
     )
 }
 

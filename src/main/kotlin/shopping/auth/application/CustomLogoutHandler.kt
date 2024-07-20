@@ -15,10 +15,13 @@ class CustomLogoutHandler(
     private val jwtService: JwtService,
     private val tokenQueryRepository: TokenQueryRepository,
     private val tokenCommandRepository: TokenCommandRepository,
-    private val objectMapper: ObjectMapper
-): LogoutHandler {
-
-    override fun logout(request: HttpServletRequest?, response: HttpServletResponse?, authentication: Authentication?) {
+    private val objectMapper: ObjectMapper,
+) : LogoutHandler {
+    override fun logout(
+        request: HttpServletRequest?,
+        response: HttpServletResponse?,
+        authentication: Authentication?,
+    ) {
         val authHeader = request?.getHeader("Authorization")
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return
@@ -47,5 +50,4 @@ class CustomLogoutHandler(
         response?.status = tokenNotFoundErrorCode.status.value()
         response?.writer?.write(jsonResponse)
     }
-
 }

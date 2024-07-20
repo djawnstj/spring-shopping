@@ -13,7 +13,7 @@ import shopping.member.domain.Member
 import shopping.member.fixture.MemberFixture
 
 @DisplayName("MemberCommandService 테스트")
-class MemberCommandServiceTest: BehaviorSpec({
+class MemberCommandServiceTest : BehaviorSpec({
 
     val memberCommandRepository: MemberCommandRepository = mockk()
     val memberQueryRepository: MemberQueryRepository = mockk()
@@ -26,6 +26,7 @@ class MemberCommandServiceTest: BehaviorSpec({
         val memberCommand = MemberFixture.`고객 1`.`회원 생성 COMMAND 생성`()
 
         When("기존 회원 중 중복된 email 이 없는 경우") {
+            every { passwordEncoder.encode(member.password) } returns "encodedPassword"
             every { memberQueryRepository.existsByEmailAndNotDeleted(memberCommand.email) } returns false
             every { memberCommandRepository.save(any<Member>()) } returns member
 

@@ -6,8 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 
 @SpringBootApplication
 @EnableJpaAuditing
-class Application {
-}
+class Application
 
 fun main(args: Array<String>) {
     runApplication<Application>(*args)

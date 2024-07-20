@@ -42,13 +42,12 @@ import shopping.member.presentation.MemberApi
             classes = [
                 JwtAuthenticationFilter::class,
                 SecurityConfig::class,
-            ]
-        )
-    ]
+            ],
+        ),
+    ],
 )
 @MockkBean(JpaMetamodelMappingContext::class)
 abstract class KotestControllerTestSupport : BehaviorSpec() {
-
     @Autowired
     protected lateinit var mockMvc: MockMvc
 
@@ -57,23 +56,31 @@ abstract class KotestControllerTestSupport : BehaviorSpec() {
 
     @MockkBean(relaxed = true)
     private lateinit var h2ConsoleProperties: H2ConsoleProperties
+
     @MockkBean
     private lateinit var memberQueryRepository: MemberQueryRepository
+
     @MockkBean
     private lateinit var jwtService: JwtService
+
     @MockkBean
     private lateinit var logoutHandler: LogoutHandler
+
     @MockkBean
     private lateinit var entryPoint: AuthenticationEntryPoint
+
     @MockkBean
     private lateinit var accessDeniedHandler: AccessDeniedHandler
+
     @MockkBean
     private lateinit var tokenRepository: TokenQueryRepository
 
     @MockkBean
     protected lateinit var memberCommandService: MemberCommandService
+
     @MockkBean
     protected lateinit var memberQueryService: MemberQueryService
+
     @MockkBean
     protected lateinit var authenticationCommandService: AuthenticationCommandService
 
@@ -89,13 +96,10 @@ abstract class KotestControllerTestSupport : BehaviorSpec() {
         this.andExpectAll(
             MockMvcResultMatchers.status().`is`(status.value()),
             MockMvcResultMatchers.jsonPath("$.meta.code").value(status.value()),
-            MockMvcResultMatchers.jsonPath("$.meta.message").value(status.reasonPhrase)
+            MockMvcResultMatchers.jsonPath("$.meta.message").value(status.reasonPhrase),
         )
 
     protected fun ResultActions.isInvalidInputValueResponse(message: String): ResultActions =
-        this.andExpect(
-            MockMvcResultMatchers.jsonPath("$.meta.code").value(ErrorCode.INVALID_INPUT_VALUE.status.value())
-        )
+        this.andExpect(MockMvcResultMatchers.jsonPath("$.meta.code").value(ErrorCode.INVALID_INPUT_VALUE.status.value()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.meta.message").value(message))
-
 }

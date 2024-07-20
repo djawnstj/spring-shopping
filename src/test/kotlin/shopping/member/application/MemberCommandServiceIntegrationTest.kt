@@ -8,7 +8,6 @@ import kotlin.test.asserter
 
 @DisplayName("MemberCommandService 통합 테스트")
 class MemberCommandServiceIntegrationTest : KotestIntegrationTestSupport() {
-
     @Autowired
     private lateinit var memberCommandService: MemberCommandService
 
@@ -25,5 +24,4 @@ class MemberCommandServiceIntegrationTest : KotestIntegrationTestSupport() {
             }
         }
     }
-
 }

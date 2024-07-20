@@ -22,7 +22,7 @@ import java.util.Base64
 import java.util.Date
 
 @DisplayName("JwtService 테스트")
-class JwtServiceTest: BehaviorSpec({
+class JwtServiceTest : BehaviorSpec({
     val tokenProvider: TokenProvider = mockk()
     val jwtProperties: JwtProperties = mockk(relaxed = true)
     val objectMapper: ObjectMapper = mockk()

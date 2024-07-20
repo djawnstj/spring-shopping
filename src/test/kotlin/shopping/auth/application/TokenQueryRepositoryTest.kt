@@ -11,6 +11,7 @@ import shopping.support.KotestIntegrationTestSupport
 class TokenQueryRepositoryTest : KotestIntegrationTestSupport() {
     @Autowired
     private lateinit var repository: TokenQueryRepository
+
     @Autowired
     private lateinit var tokenJpaRepository: TokenJpaRepository
 

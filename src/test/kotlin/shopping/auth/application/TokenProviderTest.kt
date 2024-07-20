@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import shopping.member.application.MemberCommandRepository
 import shopping.member.fixture.MemberFixture
 import shopping.support.KotestIntegrationTestSupport
-import java.util.*
+import java.util.Date
 
-class TokenProviderTest: KotestIntegrationTestSupport() {
+class TokenProviderTest : KotestIntegrationTestSupport() {
     @Autowired
     private lateinit var tokenProvider: TokenProvider
 

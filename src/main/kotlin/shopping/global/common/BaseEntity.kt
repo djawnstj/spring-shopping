@@ -14,7 +14,6 @@ import java.time.LocalDateTime
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
 abstract class BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long = 0
@@ -41,5 +40,4 @@ abstract class BaseEntity {
     fun recoverDeleteStatus() {
         deletedAt = null
     }
-
 }

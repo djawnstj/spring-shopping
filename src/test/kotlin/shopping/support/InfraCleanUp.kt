@@ -9,19 +9,20 @@ import org.springframework.transaction.annotation.Transactional
 @Component
 class InfraCleanUp(
     private var jdbcTemplate: JdbcTemplate,
-    private var entityManager: EntityManager
+    private var entityManager: EntityManager,
 ) {
     @Transactional
     fun all() {
-        val tables = entityManager.metamodel.entities.map { entityType ->
-            val tableName = entityType.javaType.getAnnotation(Table::class.java)?.name
+        val tables =
+            entityManager.metamodel.entities.map { entityType ->
+                val tableName = entityType.javaType.getAnnotation(Table::class.java)?.name
 
-            if (tableName.isNullOrBlank()) {
-                return@map entityType.name
+                if (tableName.isNullOrBlank()) {
+                    return@map entityType.name
+                }
+
+                return@map tableName
             }
-
-            return@map tableName
-        }
 
         tables.forEach { table -> jdbcTemplate.execute("TRUNCATE table $table") }
     }

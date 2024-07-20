@@ -12,8 +12,12 @@ import org.springframework.web.servlet.HandlerExceptionResolver
 class JwtAccessDeniedHandler(
     @Qualifier("handlerExceptionResolver")
     private val resolver: HandlerExceptionResolver,
-): AccessDeniedHandler {
-    override fun handle(request: HttpServletRequest, response: HttpServletResponse, accessDeniedException: AccessDeniedException) {
+) : AccessDeniedHandler {
+    override fun handle(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        accessDeniedException: AccessDeniedException,
+    ) {
         resolver.resolveException(request, response, null, accessDeniedException)
     }
 }

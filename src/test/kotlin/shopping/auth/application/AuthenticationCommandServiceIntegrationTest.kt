@@ -9,22 +9,25 @@ import shopping.auth.domain.AuthenticationCredentials
 import shopping.member.application.MemberCommandRepository
 import shopping.member.fixture.MemberFixture
 import shopping.support.KotestIntegrationTestSupport
-import java.util.*
+import java.util.UUID
 
 @DisplayName("AuthenticationCommandService 통합 테스트")
-class AuthenticationCommandServiceIntegrationTest: KotestIntegrationTestSupport() {
-
+class AuthenticationCommandServiceIntegrationTest : KotestIntegrationTestSupport() {
     @Autowired
     private lateinit var authenticationCommandService: AuthenticationCommandService
 
     @Autowired
     private lateinit var passwordEncoder: PasswordEncoder
+
     @Autowired
     private lateinit var memberCommandRepository: MemberCommandRepository
+
     @Autowired
     private lateinit var tokenProvider: TokenProvider
+
     @Autowired
     private lateinit var jwtProperties: JwtProperties
+
     @Autowired
     private lateinit var tokenCommandRepository: TokenCommandRepository
 
@@ -49,7 +52,8 @@ class AuthenticationCommandServiceIntegrationTest: KotestIntegrationTestSupport(
             val jti = UUID.randomUUID().toString()
             val accessToken = tokenProvider.buildToken(member, jti, 0L)
             val refreshToken = tokenProvider.buildToken(member, jti, jwtProperties.refreshTokenExpiration)
-            val authenticationCredentials = tokenCommandRepository.save(AuthenticationCredentials(jti, accessToken, refreshToken))
+            val authenticationCredentials =
+                tokenCommandRepository.save(AuthenticationCredentials(jti, accessToken, refreshToken))
             val tokenRefreshCommand = TokenRefreshCommand(authenticationCredentials.refreshToken)
 
             When("accessToken 이 만료되었다면") {
@@ -61,5 +65,4 @@ class AuthenticationCommandServiceIntegrationTest: KotestIntegrationTestSupport(
             }
         }
     }
-
 }

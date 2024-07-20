@@ -7,8 +7,7 @@ import shopping.member.fixture.MemberFixture
 import shopping.support.KotestIntegrationTestSupport
 
 @DisplayName("MemberCommandRepository 테스트")
-class MemberCommandRepositoryTest: KotestIntegrationTestSupport() {
-
+class MemberCommandRepositoryTest : KotestIntegrationTestSupport() {
     @Autowired
     private lateinit var memberCommandRepository: MemberCommandRepository
 
@@ -25,5 +24,4 @@ class MemberCommandRepositoryTest: KotestIntegrationTestSupport() {
             }
         }
     }
-
 }

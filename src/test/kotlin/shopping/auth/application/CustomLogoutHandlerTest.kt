@@ -1,9 +1,7 @@
 package shopping.auth.application
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
@@ -13,12 +11,10 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.context.SecurityContextHolder
 import shopping.auth.fixture.TokenFixture
-import shopping.global.common.ErrorResponse
-import shopping.global.exception.ApplicationException
 import shopping.global.exception.ErrorCode
 import java.io.PrintWriter
 
-class CustomLogoutHandlerTest: BehaviorSpec({
+class CustomLogoutHandlerTest : BehaviorSpec({
     val jwtService: JwtService = mockk()
     val tokenQueryRepository: TokenQueryRepository = mockk()
     val tokenCommandRepository: TokenCommandRepository = mockk()
@@ -32,7 +28,7 @@ class CustomLogoutHandlerTest: BehaviorSpec({
 
     Given("로그아웃 요청을 받았을 때") {
         val request: HttpServletRequest = mockk()
-        val response:HttpServletResponse = mockk()
+        val response: HttpServletResponse = mockk()
 
         val authenticationCredentials = TokenFixture.`토큰 1`.`토큰 엔티티 생성`()
 
@@ -57,7 +53,7 @@ class CustomLogoutHandlerTest: BehaviorSpec({
             every { request.getHeader("Authorization") } returns "Bearer ${authenticationCredentials.accessToken}"
             every { jwtService.getJti(authenticationCredentials.accessToken) } returns authenticationCredentials.jti
             every { tokenQueryRepository.findByJti(authenticationCredentials.jti) } returns null
-            every { objectMapper.writeValueAsString(any()) } returns "response"
+            every { objectMapper.writeValueAsString(any()) } returns jsonResponse
             justRun { response.contentType = any() }
             justRun { response.characterEncoding = any() }
             justRun { response.status = any() }
@@ -74,5 +70,4 @@ class CustomLogoutHandlerTest: BehaviorSpec({
             }
         }
     }
-
 })
