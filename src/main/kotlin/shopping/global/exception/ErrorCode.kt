@@ -6,7 +6,6 @@ enum class ErrorCode(
     val status: HttpStatus,
     val message: String,
 ) {
-
     // INPUT VALIDATION
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "입력값이 올바르지 않습니다."),
 
@@ -23,6 +22,10 @@ enum class ErrorCode(
     MISS_MATCH_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 일치하지 않습니다."),
     INVALID_TOKEN_REISSUE_REQUEST(HttpStatus.BAD_REQUEST, "토큰을 재발급 할 수 없습니다."),
     INVALID_USER_AUTH(HttpStatus.UNAUTHORIZED, "올바른 이메일 또는 비밀번호가 아닙니다."),
+
+    // PRODUCT
+    PROFANITY_CONTAIN_PRODUCT_NAME(HttpStatus.BAD_REQUEST, "상품 이름에 비속어가 포함되어 있습니다"),
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
 
     // COMMON
     INTERNAL_SEVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "관리자에게 문의 바랍니다."),

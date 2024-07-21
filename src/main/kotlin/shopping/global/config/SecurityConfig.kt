@@ -29,6 +29,9 @@ import shopping.auth.application.JwtService
 import shopping.auth.application.TokenQueryRepository
 import shopping.auth.application.JwtProperties
 import shopping.member.application.MemberQueryRepository
+import shopping.member.domain.MemberType
+
+private const val s = "/api/members"
 
 @Configuration
 @EnableWebSecurity
@@ -83,6 +86,7 @@ class SecurityConfig(
                     .requestMatchers(PathRequest.toH2Console()).permitAll()
                     .requestMatchers(*createMvcRequestMatcherForWhitelist(mvc)).permitAll()
                     .requestMatchers(createMvcRequestMatcher("/api/members", mvc, HttpMethod.POST)).permitAll()
+                    .requestMatchers(createMvcRequestMatcher("/api/products", mvc, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE)).hasRole(MemberType.SELLER.name)
                     .anyRequest()
                     .authenticated()
             }
@@ -101,8 +105,8 @@ class SecurityConfig(
             build()
         }
 
-    private fun createMvcRequestMatcher(url: String, mvc: MvcRequestMatcher.Builder, method: HttpMethod? = null): MvcRequestMatcher =
-        mvc.pattern(url).apply { method?.let { setMethod(it) } }
+    private fun createMvcRequestMatcher(url: String, mvc: MvcRequestMatcher.Builder, vararg method: HttpMethod): MvcRequestMatcher =
+        mvc.pattern(url).apply { method.forEach(::setMethod) }
 
     private fun createMvcRequestMatcherForWhitelist(mvc: MvcRequestMatcher.Builder): Array<MvcRequestMatcher> =
         WHITE_LIST_URLS.map { createMvcRequestMatcher(it, mvc) }.toTypedArray()

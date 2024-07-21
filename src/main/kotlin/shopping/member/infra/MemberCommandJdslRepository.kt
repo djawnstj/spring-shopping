@@ -5,7 +5,7 @@ import shopping.member.application.MemberCommandRepository
 import shopping.member.domain.Member
 
 @Repository
-class MemberCommandJpaRepository(
+class MemberCommandJdslRepository(
     private val memberJpaRepository: MemberJpaRepository
 ): MemberCommandRepository {
     override fun save(member: Member): Member {

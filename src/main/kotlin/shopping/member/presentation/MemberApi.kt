@@ -17,12 +17,10 @@ class MemberApi(
     private val memberCommandService: MemberCommandService,
     private val memberQueryService: MemberQueryService
 ) {
-
     @PostMapping("/api/members")
     @ResponseStatus(HttpStatus.CREATED)
     fun register(@RequestBody @Valid request: MemberRegisterRequest): SuccessResponse<MemberRegisterResponse> {
         val id = memberCommandService.createMember(request.toCommand())
         return SuccessResponse(MemberRegisterResponse(memberQueryService.findById(id)), HttpStatus.CREATED)
     }
-
 }

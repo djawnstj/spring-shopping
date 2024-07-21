@@ -13,18 +13,16 @@ import shopping.support.KotestControllerTestSupport
 @DisplayName("MemberApi 테스트")
 class MemberApiTest : KotestControllerTestSupport() {
     init {
-        Given("회원 가입 성공 - 회원 가입 요청 시 정상 적인 이메일, 비밀번호를 받아") {
-            val memberFixture = MemberFixture.`고객 1`
-            val member = memberFixture.`회원 엔티티 생성`()
+        Given("회원 가입 요청이 왔을 때") {
 
-            When("회원 가입을 진행 후") {
+            When("정상 적인 이메일, 비밀번호를 받았다면") {
                 every { memberCommandService.createMember(any()) } returns 1L
-                every { memberQueryService.findById(any()) } returns member
+                every { memberQueryService.findById(any()) } returns MemberFixture.`고객 1`.`회원 엔티티 생성`()
 
                 val response =
                     mockMvc.perform(
                         MockMvcRequestBuilders.post("/api/members")
-                            .content(objectMapper.writeValueAsBytes(memberFixture.`회원 가입 요청 DTO 생성`()))
+                            .content(objectMapper.writeValueAsBytes(MemberFixture.`고객 1`.`회원 가입 요청 DTO 생성`()))
                             .contentType(MediaType.APPLICATION_JSON),
                     ).andDo(MockMvcResultHandlers.print())
 
@@ -40,9 +38,6 @@ class MemberApiTest : KotestControllerTestSupport() {
                     )
                 }
             }
-        }
-
-        Given("회원 가입 실패 - 회원 가입 요청 시") {
 
             When("이메일이 공백인 경우") {
                 val response =

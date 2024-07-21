@@ -5,7 +5,7 @@ import shopping.auth.application.TokenCommandRepository
 import shopping.auth.domain.Token
 
 @Repository
-class TokenCommandJpaRepository(private val tokenJpaRepository: TokenJpaRepository) : TokenCommandRepository {
+class TokenCommandJdslRepository(private val tokenJpaRepository: TokenJpaRepository) : TokenCommandRepository {
     override fun save(authenticationCredentials: Token) = tokenJpaRepository.save(authenticationCredentials)
 
     override fun deleteByJti(jti: String) {
