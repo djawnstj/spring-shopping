@@ -1,16 +1,23 @@
 package shopping.product.presentation
 
+import com.fasterxml.jackson.databind.json.JsonMapper
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.fasterxml.jackson.module.kotlin.jsonMapper
 import io.kotest.datatest.withData
 import io.mockk.every
 import io.mockk.justRun
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.test.web.servlet.delete
+import org.springframework.test.web.servlet.get
+import org.springframework.test.web.servlet.put
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import shopping.product.fixture.ProductFixture
 import shopping.support.KotestControllerTestSupport
+import java.math.BigDecimal
 
 class ProductApiTest : KotestControllerTestSupport() {
 
@@ -309,18 +316,23 @@ class ProductApiTest : KotestControllerTestSupport() {
                 justRun { productCommandService.modifyProduct(any(), ProductFixture.`상품 1`.`상품 수정 COMMAND 생성`()) }
 
                 val response =
-                    mockMvc.perform(
-                        MockMvcRequestBuilders.put("/api/products/1")
-                            .content(objectMapper.writeValueAsBytes(ProductFixture.`상품 1`.`상품 수정 요청 DTO 생성`()))
-                            .contentType(MediaType.APPLICATION_JSON),
-                    ).andDo(MockMvcResultHandlers.print())
+                    mockMvc.put("/api/products/1") {
+                        content = objectMapper.writeValueAsBytes(ProductFixture.`상품 1`.`상품 수정 요청 DTO 생성`())
+                        contentType = MediaType.APPLICATION_JSON
+                    }.andDo {
+                        MockMvcResultHandlers.print()
+                    }
 
                 Then("204 상태 코드를 반환 한다") {
-                    response.andExpect(MockMvcResultMatchers.status().isNoContent)
+                    response.andExpect {
+                        status { isNoContent() }
+                    }
                 }
 
-                Then("등록 된 상품의 ID 를 반환 한다") {
-                    response.andExpect(content().string(""))
+                Then("응답 바디는 공백 이다") {
+                    response.andExpect {
+                        content { string("") }
+                    }
                 }
             }
 
@@ -514,7 +526,7 @@ class ProductApiTest : KotestControllerTestSupport() {
                         response.andExpect(MockMvcResultMatchers.status().isNoContent)
                     }
 
-                    Then("응답 바디는 공백이다") {
+                    Then("응답 바디는 공백 이다") {
                         response.andExpect(content().string(""))
                     }
                 }
@@ -589,6 +601,119 @@ class ProductApiTest : KotestControllerTestSupport() {
 
                 Then("상품 이름 에러 메시지를 반환 한다") {
                     response.isInvalidInputValueResponse("상품 이미지를 등록해주세요.")
+                }
+            }
+        }
+
+        Given("상품 삭제 요청이 왔을 때") {
+            When("path param 으로 온 상품 ID 와 동일한 상품을 삭제 후") {
+                justRun { productCommandService.deletedProduct(any()) }
+
+                val response =
+                    mockMvc.delete("/api/products/1")
+                        .andDo {
+                            MockMvcResultHandlers.print()
+                        }
+
+                Then("204 상태 코드를 반환 한다") {
+                    response.andExpect {
+                        status { isNoContent() }
+                    }
+                }
+
+                Then("응답 바디는 공백 이다") {
+                    response.andExpect {
+                        content { string("") }
+                    }
+                }
+            }
+        }
+
+        Given("상품 상세 조회 요청이 왔을 때") {
+            When("path param 으로 온 상품 ID 와 동일한 상품이 있는 경우") {
+                every { productQueryService.findProductNotDeleted(any()) } returns ProductFixture.`상품 1`.`상품 엔티티 생성`()
+
+                val response =
+                    mockMvc.get("/api/products/1").andDo {
+                        MockMvcResultHandlers.print()
+                    }
+
+                Then("200 상태 코드를 반환 한다") {
+                    response.andExpect {
+                        status { isOk() }
+                    }
+                }
+
+                Then("찾은 상품의 상세 정보를 반환 한다") {
+                    response.andExpect {
+                        jsonPath("$.data") { isMap() }
+                        jsonPath("$.data.sellingPrice") { isNumber(); value(1000000.00) }
+                        jsonPath("$.data.fixedPrice") { isNumber(); value(1000000.00) }
+                        jsonPath("$.data.productName") { isString(); value("시원한 에어컨") }
+                        jsonPath("$.data.productAmount") { isNumber(); value(100) }
+                        jsonPath("$.data.productImage") { isString(); value("https://image.com") }
+                        jsonPath("$.data.productDescription") { isString(); value("시원한 에어컨 이에용") }
+                    }
+                }
+            }
+        }
+
+        Given("상품 목록 조회 요청이 왔을 때") {
+            When("path param 으로 온 상품 ID 와 동일한 상품이 있는 경우") {
+                every { productQueryService.findAllNotDeleted() } returns listOf(ProductFixture.`상품 1`.`상품 엔티티 생성`(), ProductFixture.`상품 2`.`상품 엔티티 생성`())
+
+                val response =
+                    mockMvc.get("/api/products").andDo {
+                        MockMvcResultHandlers.print()
+                    }
+
+                Then("200 상태 코드를 반환 한다") {
+                    response.andExpect {
+                        status { isOk() }
+                    }
+                }
+
+                Then("찾은 상품 들의 정보를 반환 한다") {
+                    response.andExpect {
+                        jsonPath("$.data") { isMap() }
+                        jsonPath("$.data.products") { isArray() }
+
+                        jsonPath("$.data.products[0].sellingPrice") { isNumber(); value(1000000.00) }
+                        jsonPath("$.data.products[0].fixedPrice") { isNumber(); value(1000000.00) }
+                        jsonPath("$.data.products[0].productName") { isString(); value("시원한 에어컨") }
+                        jsonPath("$.data.products[0].productAmount") { isNumber(); value(100) }
+                        jsonPath("$.data.products[0].productImage") { isString(); value("https://image.com") }
+                        jsonPath("$.data.products[0].productDescription") { isString(); value("시원한 에어컨 이에용") }
+
+                        jsonPath("$.data.products[1].sellingPrice") { isNumber(); value(500000.00) }
+                        jsonPath("$.data.products[1].fixedPrice") { isNumber(); value(1000000.00) }
+                        jsonPath("$.data.products[1].productName") { isString(); value("시원한 에어컨 - 할인가") }
+                        jsonPath("$.data.products[1].productAmount") { isNumber(); value(50) }
+                        jsonPath("$.data.products[1].productImage") { isString(); value("https://image.com") }
+                        jsonPath("$.data.products[1].productDescription") { isString(); value("시원한 에어컨 할인 제품 이에용") }
+                    }
+                }
+            }
+
+            When("path param 으로 온 상품 ID 와 동일한 상품이 없는 경우") {
+                every { productQueryService.findAllNotDeleted() } returns listOf()
+
+                val response =
+                    mockMvc.get("/api/products").andDo {
+                        MockMvcResultHandlers.print()
+                    }
+
+                Then("200 상태 코드를 반환 한다") {
+                    response.andExpect {
+                        status { isOk() }
+                    }
+                }
+
+                Then("빈 배열을 반환 한다") {
+                    response.andExpect {
+                        jsonPath("$.data") { isMap() }
+                        jsonPath("$.data.products") { isArray(); isEmpty() }
+                    }
                 }
             }
         }
