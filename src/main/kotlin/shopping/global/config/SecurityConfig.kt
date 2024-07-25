@@ -31,8 +31,6 @@ import shopping.auth.application.JwtProperties
 import shopping.member.application.MemberQueryRepository
 import shopping.member.domain.MemberType
 
-private const val s = "/api/members"
-
 @Configuration
 @EnableWebSecurity
 @EnableConfigurationProperties(JwtProperties::class)
@@ -88,7 +86,7 @@ class SecurityConfig(
                     .requestMatchers(createMvcRequestMatcher("/api/members", mvc, HttpMethod.POST)).permitAll()
                     .requestMatchers(createMvcRequestMatcher("/api/products", mvc, HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE)).hasRole(MemberType.SELLER.name)
                     .anyRequest()
-                    .authenticated()
+                    .permitAll()
             }
             sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             authenticationProvider(authenticationProvider)

@@ -7,7 +7,6 @@ import org.springframework.web.client.support.RestClientAdapter
 import org.springframework.web.service.invoker.HttpServiceProxyFactory
 import shopping.product.infra.ProfanityRepository
 
-
 @Configuration
 class ProfanityConfig {
     @Bean
