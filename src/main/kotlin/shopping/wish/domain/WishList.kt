@@ -7,13 +7,20 @@ import shopping.global.common.BaseEntity
 
 @Entity
 class WishList(
-    memberId: Long,
+    memberId: Long
 ) : BaseEntity() {
     @field:Column(name = "member_id", nullable = false)
-    var memberId: Long = memberId
+    var member_id: Long = memberId
         protected set
 
     @field:Embedded
-    var wishListProducts: WishListProducts = WishListProducts()
-        protected set
+    private val wishProducts: WishProducts = WishProducts()
+
+    fun addWishProduct(wishProduct: WishProduct) {
+        this.wishProducts.add(wishProduct)
+    }
+
+    fun deleteWishProduct(wishProduct: WishProduct) {
+        this.wishProducts.delete(wishProduct)
+    }
 }
