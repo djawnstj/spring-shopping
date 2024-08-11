@@ -20,7 +20,7 @@ class WishListCommandService(
 ) {
     fun addWishProduct(memberId: Long, wishProductAddCommand: WishProductAddCommand) {
         val wishList = wishListQueryRepository.findByMemberIdAndNotDeleted(memberId).orCreate(memberId)
-        val wishProduct = productQueryService.findProductNotDeleted(wishProductAddCommand.productId).toWishProduct(wishList)
+        val wishProduct = productQueryService.findProductNotDeleted(wishProductAddCommand.productId)
 
         wishList.addWishProduct(wishProduct)
     }
@@ -37,10 +37,8 @@ class WishListCommandService(
         val wishList = wishListQueryRepository.findByMemberIdAndNotDeleted(memberId)
             ?: throw ApplicationException(ErrorCode.WISH_LIST_NOT_FOUND)
 
-        val wishProduct = productQueryService.findProductNotDeleted(wishProductDeleteCommand.productId).toWishProduct(wishList)
+        val wishProduct = productQueryService.findProductNotDeleted(wishProductDeleteCommand.productId)
 
         wishList.deleteWishProduct(wishProduct)
     }
-
-    private fun Product.toWishProduct(wishList: WishList): WishProduct = WishProduct(this, wishList)
 }

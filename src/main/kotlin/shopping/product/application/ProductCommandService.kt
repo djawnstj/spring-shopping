@@ -23,7 +23,7 @@ class ProductCommandService(
     }
 
     fun modifyProduct(productId: Long, productUpdateCommand: ProductUpdateCommand) {
-        productUpdateCommand.productName?.let { validateProfanityProductName(it) }
+        validateProfanityProductName(productUpdateCommand.productName)
         val product = findProductNotDeleted(productId)
 
         product.modify(productUpdateCommand.toEntity())

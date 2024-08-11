@@ -9,6 +9,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import shopping.global.exception.ApplicationException
 import shopping.product.application.ProductQueryService
+import shopping.wish.application.command.WishProductCommandRepository
 import shopping.wish.domain.WishList
 import shopping.wish.fixture.WishProductFixture
 
@@ -16,8 +17,11 @@ class WishListCommandServiceTest : BehaviorSpec({
     val wishListQueryRepository: WishListQueryRepository = mockk()
     val wishListCommandRepository: WishListCommandRepository = mockk()
     val productQueryService: ProductQueryService = mockk()
+    val wishProductCommandRepository: WishProductCommandRepository = mockk()
 
-    val service = WishListCommandService(wishListQueryRepository, wishListCommandRepository, productQueryService)
+    val service = WishListCommandService(wishListQueryRepository, wishListCommandRepository, productQueryService,
+        wishProductCommandRepository
+    )
 
     Given("회원 ID 와 위시 리스트에 추가할 상품 정보를 받아") {
         val memberId = 1L

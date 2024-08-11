@@ -5,6 +5,7 @@ import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
 import shopping.global.common.BaseEntity
+import shopping.product.domain.Product
 
 @Entity
 @Table(name = "wish_list")
@@ -18,13 +19,13 @@ class WishList(
     @field:Embedded
     private val wishProducts: WishProducts = WishProducts()
 
-    fun addWishProduct(wishProduct: WishProduct) {
+    fun addWishProduct(wishProduct: Product) {
         this.wishProducts.add(wishProduct)
     }
 
-    fun deleteWishProduct(wishProduct: WishProduct) {
+    fun deleteWishProduct(wishProduct: Product) {
         this.wishProducts.delete(wishProduct)
     }
 
-    fun getWishProducts(): Set<WishProduct> = wishProducts.toSet()
+    fun getWishProducts(): Set<Product> = wishProducts.toSet()
 }

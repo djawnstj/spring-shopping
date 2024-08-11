@@ -1,6 +1,8 @@
 package shopping.wish.application
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.shouldBe
 import org.springframework.beans.factory.annotation.Autowired
 import shopping.member.fixture.MemberFixture
 import shopping.member.infra.MemberJpaRepository
@@ -44,9 +46,8 @@ class WishListCommandServiceIntegrationTest : KotestIntegrationTestSupport() {
 
         Given("회원 ID 와 위시 리스트에서 제거할 상품 정보를 받아") {
             val member = memberJpaRepository.save(MemberFixture.`고객 1`.`회원 엔티티 생성`())
-            val wishList = wishListJpaRepository.save(WishListFixture.`고객 1의 위시 리스트`.`엔티티 생성`(member))
             val product = productJpaRepository.save(ProductFixture.`상품 1`.`상품 엔티티 생성`())
-            wishProductJpaRepository.save(WishProductFixture.`고객 1의 위시 리스트에 저장 된 상품 1`.`엔티티 생성`(product, wishList))
+            wishProductJpaRepository.save(WishProductFixture.`고객 1의 위시 리스트에 저장 된 상품 1`.`엔티티 생성`(product))
             val command = WishProductFixture.`고객 1의 위시 리스트에 저장 된 상품 1`.`위시 리스트 상품 제거 COMMAND 생성`(product)
 
             Then("위시 리스트에서 상품을 제거 한다") {

@@ -8,6 +8,7 @@ import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import shopping.global.exception.ApplicationException
+import shopping.product.domain.Product
 import shopping.wish.fixture.WishProductsFixture
 
 class WishProductsTest : BehaviorSpec({
@@ -22,11 +23,10 @@ class WishProductsTest : BehaviorSpec({
     }
 
     Given("위시 리스트에 저장 된 상품을 삭제할 때") {
-        val wishProduct: WishProduct = mockk()
-        val wishProducts = WishProductsFixture.`위시 리스트 상품 1개 목록`.`객체 생성`(wishProduct)
+        val wishProduct: Product = mockk()
+        val wishProducts = WishProductsFixture.`위시 리스트 상품 1개 목록`.`객체 생성`()
 
         When("제거할 상품이 위시 리스트에 존재 한다면") {
-            every { wishProduct.isSameWishProduct(any()) } returns true
             wishProducts.delete(wishProduct)
 
             Then("위시 리스트 상품을 제거한다") {
@@ -35,7 +35,6 @@ class WishProductsTest : BehaviorSpec({
         }
 
         When("제거할 상품이 위시 리스트에 없다면") {
-            every { wishProduct.isSameWishProduct(any()) } returns false
 
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {

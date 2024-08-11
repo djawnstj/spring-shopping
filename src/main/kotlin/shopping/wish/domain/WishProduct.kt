@@ -11,20 +11,11 @@ import shopping.product.domain.Product
 @Table(name = "wish_product")
 class WishProduct(
     product: Product,
-    wishList: WishList,
 ) : BaseEntity() {
     @field:ManyToOne
     @field:JoinColumn(name = "product_id", nullable = false)
     var product: Product = product
         protected set
 
-    @field:ManyToOne
-    @field:JoinColumn(name = "wishlist_id", nullable = false)
-    var wishList: WishList = wishList
-        protected set
-
-    fun isSameWishProduct(wishProduct: WishProduct): Boolean =
-        (this.product == wishProduct.product &&
-                this.wishList == wishProduct.wishList)
-
+    fun isSameWishProduct(wishProduct: WishProduct): Boolean = this.product.id == wishProduct.product.id
 }
